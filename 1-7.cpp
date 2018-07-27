@@ -14,11 +14,11 @@ using namespace std;
 
 struct RGBA
 {
-  char red;
-  char green;
-  char blue;
-  char alpha;
-
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+  unsigned char alpha;
+  
   char print()
   {
     if(red==0xff&&green==0x0&&blue==0x0&&alpha==0xff)
@@ -41,16 +41,16 @@ struct RGBA
   }
 };
 
-int main(int argc, const char * argv[]) {
-  const int dimensions = 4;
-  RGBA matrix[dimensions][dimensions];
-
+void Initialize(RGBA** matrix, const int dimensions)
+{
+  std::cout << "Initializing..." << std::endl;
+  
   for(int i=0;i<dimensions;i++)
   {
     for(int j=0;j<dimensions;j++)
     {
       struct RGBA rgba;
-
+      
       if(i==0)
       {
         rgba.red=(char)255;
@@ -77,14 +77,21 @@ int main(int argc, const char * argv[]) {
         rgba.red=(char)255;
         rgba.green=(char)255;
         rgba.blue=(char)255;
-        rgba.alpha=1;
+        rgba.alpha=0xff;
       }
       matrix[i][j] = rgba;
       std::cout << rgba.print();
     }
     std::cout << std::endl;
   }
+}
 
+int main(int argc, const char * argv[]) {
+  const int dimensions = 4;
+  RGBA matrix[dimensions][dimensions];
+  Initialize(matrix, dimensions);
+  
   return 0;
 }
+
 
