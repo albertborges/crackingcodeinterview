@@ -10,7 +10,6 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <iostream>
-#include <vector>
 using namespace std;
 
 struct RGBA
@@ -87,27 +86,10 @@ void Initialize(RGBA** matrix, const int dimensions)
   }
 }
 
-void Rotate(RGBA**, const int dimensions)
-{
-  
-}
-
 int main(int argc, const char * argv[]) {
   const int dimensions = 4;
-  RGBA** matrix = new RGBA*[dimensions];
-  for(int i=0;i<dimensions;i++)
-  {
-    matrix[i] = new RGBA[dimensions];
-  }
-  
+  RGBA matrix[dimensions][dimensions];
   Initialize(matrix, dimensions);
-  
-  for(int i=0;i<dimensions;i++)
-  {
-    delete[] matrix[i];
-  }
-  
-  delete[] matrix;
   
   return 0;
 }
