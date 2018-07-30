@@ -42,7 +42,19 @@ struct RGBA
   }
 };
 
-void Initialize(RGBA** matrix, const int dimensions)
+void Print(vector<vector<RGBA>> matrix, const int dimensions)
+{
+  for(int i=0;i<dimensions;i++)
+  {
+    for(int j=0;j<dimensions;j++)
+    {
+      std::cout << matrix[i][j].print();
+    }
+    std::cout << std::endl;
+  }
+}
+
+void Initialize(vector<vector<RGBA>>& matrix, const int dimensions)
 {
   std::cout << "Initializing..." << std::endl;
   
@@ -87,27 +99,84 @@ void Initialize(RGBA** matrix, const int dimensions)
   }
 }
 
-void Rotate(RGBA**, const int dimensions)
+struct position
 {
+  position(int r, int c) :
+  m_r(r),
+  m_c(c)
+  {}
   
+  int m_r;
+  int m_c;
+};
+
+void Rotate(vector<vector<RGBA>>& matrix, const int dimensions)
+{
+  int iters_max = dimensions-1;
+  int iters_min = 0;
+  int delta;
+  
+  while(iters_max-iters_min > 0)
+  {
+    delta = iters_max - iters_min;
+    
+    for(int c=0;c<delta;c++)
+    {
+      RGBA temp;
+      
+      // Upper left corner
+      struct position pos1 = position(iters_min, iters_min+c);
+      
+      // Upper right corner
+      struct position pos2 = position(iters_min+c, iters_max);
+      
+      // Lower right corner
+      struct position pos3 = position(iters_max, iters_max-c);
+      
+      // Lower left corner
+      struct position pos4 = position(iters_max-c,iters_min);
+      
+      RGBA& rpos1 = matrix[pos1.m_r][pos1.m_c];
+      RGBA& rpos2 = matrix[pos2.m_r][pos2.m_c];
+      RGBA& rpos3 = matrix[pos3.m_r][pos3.m_c];
+      RGBA& rpos4 = matrix[pos4.m_r][pos4.m_c];
+      
+      // LTR
+      temp = rpos2;
+      rpos2 = rpos1;
+      
+      // RTB
+      rpos1 = rpos3;
+      rpos3 = temp;
+      
+      // BTL
+      temp = rpos4;
+      rpos4 = rpos1;
+      
+      // LTT
+      rpos1 = temp;
+    }
+    
+    iters_max--;
+    iters_min++;
+  }
 }
 
 int main(int argc, const char * argv[]) {
   const int dimensions = 4;
-  RGBA** matrix = new RGBA*[dimensions];
-  for(int i=0;i<dimensions;i++)
+  vector<vector<RGBA>>matrix;
+  matrix.resize(dimensions);
+  
+  for(int i=0;i<matrix.size();i++)
   {
-    matrix[i] = new RGBA[dimensions];
+    matrix[i].resize(dimensions);
   }
   
   Initialize(matrix, dimensions);
   
-  for(int i=0;i<dimensions;i++)
-  {
-    delete[] matrix[i];
-  }
+  Rotate(matrix, dimensions);
   
-  delete[] matrix;
+  Print(matrix, dimensions);
   
   return 0;
 }
